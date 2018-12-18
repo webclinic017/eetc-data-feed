@@ -1,0 +1,6 @@
+[package]
+name = "eetc-data-feed"
+version = "0.1.0"
+authors = ["delicmakaveli <delic665@gmail.com>"]
+
+[dependencies]
