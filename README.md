@@ -7,8 +7,8 @@ Data Feed by EETC written in Rust.
 Service for providing financial data via ZeroMQ.
 
 **System requirements:**
-- Linux (Tested on Ubuntu 18.04 only, so far)
-- Rust
+- Linux (tested on Ubuntu 18.04 only)
+- Rust 1.30.0 (https://www.rust-lang.org/tools/install)
 - libzmq:
     - To install run these commands in your home dir:
     - `wget https://github.com/zeromq/libzmq/releases/download/v4.2.5/zeromq-4.2.5.tar.gz`
@@ -29,11 +29,13 @@ Service for providing financial data via ZeroMQ.
 
 **Installation**:
 - Download & extract the project & cd to project root directory
-- Run `cargo build` to build the project
+- Run command `cargo build` to build the project
+- Run command `cargo run` to run the project
 
-**Running**:
-- **To start**, cd to project root dir & run command: `bash start.sh` or `./start.sh`
-- **To stop**, cd to project root dir & run command: `bash stop.sh` or `./stop.sh`
+**Build project and run in production**:
+- cd to project root dir & run command: `cargo build --release`
+- Copy file _target/release/eetc-data-feed_ to server
+- Run command:`./eetc-data-feed` to run it
 
 **Usage**:
 - First you have to get the snapshot of data to maintain(candles, order books, trades, etc.)
