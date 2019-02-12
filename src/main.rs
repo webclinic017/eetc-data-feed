@@ -71,7 +71,6 @@ fn bitfinex_data_feed_req_rep_routine() {
         .expect("Could not bind DEALER socket.");
 
     // Spawn Worker Threads
-    // TODO refaactor to spawn a worker thread for each request that comes in
     for i in 1..=conf::constants::BFX_HIST_DATA_MICROSERVICE_THREADS {
         thread::spawn(|| {
             let zmq_context:zmq::Context = zmq::Context::new();
