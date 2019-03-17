@@ -4,6 +4,8 @@
 # Copy this script to your home directory and run it
 ############################################################
 
+cd /home/ubuntu/
+
 # Download zeromq
 # Ref http://zeromq.org/intro:get-the-software
 wget https://github.com/zeromq/libzmq/releases/download/v4.2.5/zeromq-4.2.5.tar.gz
