@@ -14,10 +14,10 @@ fn main() {
     let zmq_xsub_socket = zmq_context.socket(zmq::XSUB).unwrap();
 
     zmq_xpub_socket
-        .bind(conf::constants::EETC_DATA_FEED_PUB_ENDPOINT)
+        .bind(conf::constants::EETC_DATA_FEED_XPUB_ENDPOINT)
         .expect("Could not bind PUB socket.");
     zmq_xsub_socket
-        .connect(conf::constants::BFX_DATA_FEED_SUB_ENDPOINT)
+        .connect(conf::constants::BFX_DATA_FEED_XSUB_ENDPOINT)
         .expect("Could not connect to PUB.");
 
     // Spawn Thread for REQ-REP for Bitfinex Hist Data Microservice
