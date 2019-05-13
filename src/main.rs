@@ -10,21 +10,15 @@ fn main() {
 
     let zmq_context:zmq::Context = zmq::Context::new();
 
-    let zmq_pub_socket = zmq_context.socket(zmq::PUB).unwrap();
-    let zmq_pull_socket = zmq_context.socket(zmq::PULL).unwrap();
+    let zmq_xpub_socket = zmq_context.socket(zmq::XPUB).unwrap();
+    let zmq_xsub_socket = zmq_context.socket(zmq::XSUB).unwrap();
 
-    zmq_pull_socket
-        .bind(conf::constants::EETC_DATA_FEED_PUSH_PULL_ENDPOINT)
-        .expect("Could not bind PULL socket.");
-    zmq_pub_socket
+    zmq_xpub_socket
         .bind(conf::constants::EETC_DATA_FEED_PUB_ENDPOINT)
         .expect("Could not bind PUB socket.");
-
-    // Spawn Thread for Bitfinex Data Feed PUB-SUB
-    thread::spawn(move || {
-        println!("Started Bitfinex Data Feed PUB-SUB Thread.");
-        bitfinex_data_feed_pub_sub_routine(&zmq_context);
-    });
+    zmq_xsub_socket
+        .connect(conf::constants::BFX_DATA_FEED_SUB_ENDPOINT)
+        .expect("Could not connect to PUB.");
 
     // Spawn Thread for REQ-REP for Bitfinex Hist Data Microservice
     thread::spawn(|| {
@@ -32,29 +26,7 @@ fn main() {
         bitfinex_data_feed_req_rep_routine();
     });
 
-    // TODO Spawn Thread for InteractiveBrokers Data Feed PUB-SUB
-
-    // TODO Spawn Thread for InteractiveBrokers Data Feed REQ-REP
-
-    zmq::proxy(&zmq_pull_socket, &zmq_pub_socket).expect("ZMQ Proxy Error.");
-}
-
-fn bitfinex_data_feed_pub_sub_routine(zmq_context:&zmq::Context) {
-    let zmq_sub_socket = zmq_context.socket(zmq::SUB).unwrap();
-    let zmq_push_socket = zmq_context.socket(zmq::PUSH).unwrap();
-
-    zmq_push_socket
-        .connect(conf::constants::EETC_DATA_FEED_PUSH_PULL_ENDPOINT)
-        .expect("Could not connect to PULL");
-    zmq_sub_socket
-        .connect(conf::constants::BFX_DATA_FEED_SUB_ENDPOINT)
-        .expect("Could not connect to PUB.");
-
-    zmq_sub_socket
-        .set_subscribe(b"") //  "" is the default value to subscribe to all topics
-        .expect("Could not subscribe to topic.");
-
-    zmq::proxy(&zmq_sub_socket, &zmq_push_socket).expect("ZMQ Proxy Error.");
+    zmq::proxy(&zmq_xsub_socket, &zmq_xpub_socket).expect("ZMQ Proxy Error.");
 }
 
 fn bitfinex_data_feed_req_rep_routine() {
